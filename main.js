@@ -11,8 +11,7 @@ function createWindow() {
   // Create the browser window.
 
   // 画面サイズを取得
-  // const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
-  const { width, height } = electron.screen.getPrimaryDisplay().size;
+  const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
 
   console.log('width: ' + width);
   console.log('height: ' + height);
@@ -23,8 +22,8 @@ function createWindow() {
   });
 
   invisibleWindow = new BrowserWindow({
-    width: width,
-    height: height,
+    width,
+    height,
     frame: false, //　ウィンドウフレーム非表示
     transparent: true,  //背景を透明に
     alwaysOnTop: true,  //常に最前面
