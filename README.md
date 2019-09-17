@@ -13,7 +13,7 @@ https://api.slack.com/custom-integrations/legacy-tokens
 ### ダウンロード
 ```
 # Clone this repository
-git clone https://github.com/cyamax/nicoSlack
+git clone https://github.com/RikutoYamaguchi/nicoSlack.git
 # Go into the repositor
 cd nicoSlack
 ```
@@ -31,9 +31,9 @@ cd nicoSlack
 
 ```
 # Install dependencies
-npm install
+yarn install
 # Run the App
-npm start
+yarn start
 ```
 
 ## Lisence
