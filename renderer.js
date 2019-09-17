@@ -1,13 +1,13 @@
 
 NicoJS = require('nicoJS');
 const { ipcRenderer } = require('electron');
-
+const emoji = require('node-emoji');
 
 
 var nico = new NicoJS({
     app: document.getElementById('app'),
-    width: 1500,
-    height: 400,
+    width: window.innerWidth,
+    height: window.innerHeight,
     font_size: 50,     // opt
     color: '#fff'  // opt
 });
@@ -22,5 +22,5 @@ nico.listen();
 ipcRenderer.on('slackContent', (event, arg) => {
     console.log(arg) // "pong"を表示
 
-    nico.send(arg);
+    nico.send(emoji.emojify(arg));
 });

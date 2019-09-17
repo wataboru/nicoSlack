@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@slack/client": "^4.3.1",
-    "nicojs": "^1.1.8"
+    "nicojs": "^1.1.8",
+    "node-emoji": "^1.10.0"
   }
 }
