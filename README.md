@@ -21,6 +21,11 @@ cd nicoSlack
 ### account.jsonにTokenを記入
 
 取得したAPI Tokenを```account.json```に記入。
+
+```
+cp account_sample.json account.json
+```
+
 ```
 {
     "token" : "xoxp-xxxxxxxxxxxxxxx"}
