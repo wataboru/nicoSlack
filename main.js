@@ -115,6 +115,9 @@ rtm.on('message', (event) => {
   // }
 
   // Log the message
+  if (!message.text) {
+    return;
+  }
   console.log(`(channel:${message.channel}) ${message.user} says: ${message.text}`);
   sendToRendererContent(`${message.text}`);
 });
