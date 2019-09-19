@@ -1,12 +1,7 @@
-
 const Vue = require('vue/dist/vue.js')
 const _ = require('lodash')
 const { ipcRenderer } = require('electron')
 const emoji = require('node-emoji')
-
-function nextFlame (callback) {
-  setTimeout(() => callback(), 1000)
-}
 
 const dispatcher = new Vue()
 
