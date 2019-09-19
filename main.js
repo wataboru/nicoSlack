@@ -13,14 +13,6 @@ function createWindow() {
   // 画面サイズを取得
   const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
 
-  console.log('width: ' + width);
-  console.log('height: ' + height);
-  
-  mainWindow = new BrowserWindow({
-    width: 320,
-    height: 240,
-  });
-
   invisibleWindow = new BrowserWindow({
     width,
     height,
@@ -29,34 +21,16 @@ function createWindow() {
     alwaysOnTop: true,  //常に最前面
   });
 
-
   // 透明な部分のマウスのクリックを検知させない
   invisibleWindow.setIgnoreMouseEvents(true);
 
-  // and load the index.html of the app.
-  mainWindow.loadFile('index.html');
   invisibleWindow.loadFile('invisible.html');
-
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   invisibleWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
     invisibleWindow = null;
     mainWindow = null;
   });
-
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    invisibleWindow = null;
-    mainWindow = null;
-  })
 }
 
 // This method will be called when Electron has finished
