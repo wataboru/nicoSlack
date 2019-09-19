@@ -41,5 +41,15 @@ yarn install
 yarn start
 ```
 
+### Mac環境でのWindowsビルド
+
+以下のツール群をインストールしてから `yarn build` を実行する
+
+```
+brew cask install xquartz
+brew install wine
+brew install winetricks
+```
+
 ## Lisence
 MIT Lisenceのもとで公開されています。
