@@ -5,8 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "build": "electron-packager . nicoSlack --platform=darwin,win32 --arch=x64 --overwrite"
   },
   "repository": "https://github.com/cyamax/nicoSlack",
   "keywords": [
@@ -17,7 +16,7 @@
   "license": "MIT Lisence",
   "devDependencies": {
     "electron": "^2.0.0",
-    "electron-builder": "^21.2.0"
+    "electron-packager": "^14.0.6"
   },
   "dependencies": {
     "@slack/client": "^4.3.1",
