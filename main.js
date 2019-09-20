@@ -19,6 +19,7 @@ function createWindow() {
     frame: false, //　ウィンドウフレーム非表示
     transparent: true,  //背景を透明に
     alwaysOnTop: true,  //常に最前面
+    hasShadow: false
   });
 
   // 透明な部分のマウスのクリックを検知させない
