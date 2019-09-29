@@ -166,7 +166,6 @@ const App = new Vue({
       }
 
       const simpleStyle = commentData[0]
-      const detailStyle = commentData[commentData.length - 1]
 
       // font-size指定
       if (!isNaN(+simpleStyle) && _.isNumber(+simpleStyle)) {
