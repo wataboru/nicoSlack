@@ -93,7 +93,8 @@ rtm.on('message', (event) => {
   if (!message.text) {
     return;
   }
+  const messageText = message.text.replace(/<.*>\s/, '');
   console.log(`(channel:${message.channel}) ${message.user} says: ${message.text}`);
-  sendToRendererContent(`${message.text}`);
+  sendToRendererContent(messageText);
 });
 
