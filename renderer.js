@@ -37,9 +37,7 @@ Vue.component('Comment', {
     }
   },
   template: `
-<div class="comment transition" :class="transformClass" :style="style" ref="comment">
-{{ comment }}
-</div>
+<div class="comment transition" :class="transformClass" :style="style" ref="comment" v-html="comment" />
   `,
   computed: {
     style() {
@@ -99,6 +97,14 @@ Vue.component('Comment', {
   mounted() {
     const $comment = this.$refs.comment
     this.width = $comment.clientWidth
+    const img = this.$refs.comment.querySelector('img')
+    if (img) {
+      img.onload = () => {
+        img.width = this.fontSize
+        this.width = +this.width + +this.fontSize
+      }
+    }
+
     if (this.position !== '') {
       setTimeout(() => {
         this.$emit('outOfWindow', this.commentId)
@@ -238,9 +244,23 @@ const App = new Vue({
   }
 })
 
+let emojiList = {}
+
+ipcRenderer.on('emojiInitialize', (event, arg) => {
+  emojiList = JSON.parse(arg)
+  console.log(emojiList)
+})
+
 ipcRenderer.on('slackContent', (event, arg) => {
     // nicoSlack.send();
-  dispatcher.$emit('send', emoji.emojify(arg))
+  let messageText = emoji.emojify(arg).replace(/[♂♀]/, '')
+  for(let key in emojiList) {
+    const url = emojiList[key]
+    const reg = new RegExp(`:${key}:`)
+    messageText = messageText.replace(reg, `<img src="${url}">`)
+  }
+  // sendToRendererContent(`<img src="${customEmojiList[message.reaction]}">`);
+  dispatcher.$emit('send', messageText)
 });
 
 const colorNames = [

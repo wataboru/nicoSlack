@@ -2,6 +2,7 @@
 
 const electron = require('electron');
 const { app, BrowserWindow, ipcMain } = electron;
+const emoji = require('node-emoji')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -32,6 +33,9 @@ function createWindow() {
     invisibleWindow = null;
     mainWindow = null;
   });
+  // invisibleWindow.on('focus', function() {
+  //   invisibleWindow.webContents.send('emojiInitialize', JSON.stringify(customEmojiList))
+  // })
 }
 
 // This method will be called when Electron has finished
@@ -67,15 +71,29 @@ function sendToRendererContent(slackText) {
   // レンダラー側のonが実行される前に送るとエラーで落ちるので注意
   invisibleWindow.webContents.send('slackContent', slackText)
   // });
-}; 
+}
 
-
-
-//// Slack Outgoing Web Hook
+const Slack = require('slack-node');
 const { RTMClient } = require('@slack/client');
 const token = require('./account.json').token;
 
-const rtm = new RTMClient(token, { logLevel: 'debug' });
+const slack = new Slack(token);
+const customEmojiList = {}
+
+slack.api("emoji.list", function (err, response) {
+  for(let key in response.emoji){
+    const url = response.emoji[key];
+    //エイリアスは無視
+    if(url.match(/alias/)){
+      continue;
+    }
+    customEmojiList[key] = url
+  }
+  invisibleWindow.webContents.send('emojiInitialize', JSON.stringify(customEmojiList))
+});
+
+// const rtm = new RTMClient(token, { logLevel: 'debug' });
+const rtm = new RTMClient(token);
 
 rtm.start();
 
@@ -93,7 +111,6 @@ rtm.on('message', (event) => {
     return;
   }
   const messageText = message.text.replace(/<.*>\s/, '');
-  console.log(`(channel:${message.channel}) ${message.user} says: ${message.text}`);
   sendToRendererContent(messageText);
 });
 
@@ -106,4 +123,3 @@ rtm.on('reaction_added', event => {
   // }
   sendToRendererContent(`:${message.reaction}:`);
 })
-
