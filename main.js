@@ -89,7 +89,6 @@ rtm.on('message', (event) => {
   //     return;
   // }
 
-  // Log the message
   if (!message.text) {
     return;
   }
@@ -97,4 +96,14 @@ rtm.on('message', (event) => {
   console.log(`(channel:${message.channel}) ${message.user} says: ${message.text}`);
   sendToRendererContent(messageText);
 });
+
+rtm.on('reaction_added', event => {
+  let message = event;
+  // Skip messages that are from a bot or my own user ID
+  // if ((message.subtype && message.subtype === 'bot_message') ||
+  //     (!message.subtype && message.user === rtm.activeUserId)) {
+  //     return;
+  // }
+  sendToRendererContent(`:${message.reaction}:`);
+})
 
