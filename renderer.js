@@ -14,19 +14,26 @@ Vue.component('Comment', {
       default: ''
     },
     speed: {
-      default: 150
+      default: 300
     },
     fontSize: {
       default: 48
     },
     color: {
       default: '#fff'
+    },
+    position: {
+      default: ''
+    },
+    bottomComments: {
+      default: () => []
     }
   },
   data() {
     return {
       transitionName: '',
-      width: 0
+      width: 0,
+      bottomPosition: 0,
     }
   },
   template: `
@@ -50,6 +57,26 @@ Vue.component('Comment', {
         }
       }
 
+      const bottomIndex = _.findIndex(this.bottomComments, bottomComment => {
+        return bottomComment.id === this.commentId
+      })
+      if (bottomIndex >= 0) {
+        this.bottomPosition = bottomIndex * this.fontSize + 10 + 'px'
+      }
+
+      if (this.position === 'bottom') {
+        styles = {
+          ...styles,
+          transitionDuration: 0,
+          top: 'auto',
+          left: '10px',
+          bottom: this.bottomPosition,
+          width: 'calc(100% - 20px)',
+          textAlign: 'center',
+          whiteSpace: 'normal',
+        }
+      }
+
       return styles
     },
     transformClass() {
@@ -58,7 +85,7 @@ Vue.component('Comment', {
     transitionDuration() {
       const w = window.innerWidth
       return {
-        'transition-duration': (w + this.width) / this.speed + 's'
+        transitionDuration: (w + this.width) / this.speed + 's'
       }
     },
     topPosition() {
@@ -72,6 +99,12 @@ Vue.component('Comment', {
   mounted() {
     const $comment = this.$refs.comment
     this.width = $comment.clientWidth
+    if (this.position !== '') {
+      setTimeout(() => {
+        this.$emit('outOfWindow', this.commentId)
+      }, 4000)
+      return
+    }
     const observer = new IntersectionObserver((entries) => {
       if (!entries[0].isIntersecting) {
         this.$emit('outOfWindow', this.commentId)
@@ -100,10 +133,19 @@ const App = new Vue({
       :font-size="comment.fontSize" 
       :color="comment.color" 
       :speed="comment.speed" 
+      :position="comment.position" 
+      :bottom-comments="bottomComments"
       v-on:outOfWindow="remove" 
     />
 </div>
   `,
+  computed: {
+    bottomComments() {
+      return _.filter(this.comments, comment => {
+        return comment.position === 'bottom'
+      })
+    },
+  },
   methods: {
     remove(commentId) {
       this.comments = _.filter(this.comments, (comment) => {
@@ -169,6 +211,14 @@ const App = new Vue({
             commentObject = {
               ...commentObject,
               speed: !isNaN(+setting[2]) ? +setting[2] : 150
+            }
+          }
+
+          if(setting[1] === 'position') {
+            removeIndexes.push(i)
+            commentObject = {
+              ...commentObject,
+              position: setting[2]
             }
           }
         }
