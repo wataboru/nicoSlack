@@ -1,8 +1,9 @@
 "use strict"
 
 const electron = require('electron');
-const { app, BrowserWindow, ipcMain } = electron;
+const { app, BrowserWindow, ipcMain, Menu } = electron;
 const emoji = require('node-emoji')
+const path = require('path')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -20,8 +21,11 @@ function createWindow() {
     frame: false, //　ウィンドウフレーム非表示
     transparent: true,  //背景を透明に
     alwaysOnTop: true,  //常に最前面
-    hasShadow: false
-  });
+    hasShadow: false,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    },
+  })
 
   // 透明な部分のマウスのクリックを検知させない
   invisibleWindow.setIgnoreMouseEvents(true);
@@ -64,11 +68,11 @@ app.on('activate', function () {
 // code. You can also put them in separate files and require them here.
 
 
-
 // 透明画面にメッセージを送る
 function sendToRendererContent(slackText) {
   // mainWindow.webContents.on('did-finish-load', () => {
   // レンダラー側のonが実行される前に送るとエラーで落ちるので注意
+  // invisibleWindow.webContents.send('slackContent', slackText)
   invisibleWindow.webContents.send('slackContent', slackText)
   // });
 }
